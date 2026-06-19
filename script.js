@@ -78,9 +78,37 @@ function makeRing(size, tube, opacity, rx){
     return ring
 }
 
-let ring1 = makeRing(3.05, 0.018, 0.55, 1.15)
-let ring2 = makeRing(3.35, 0.012, 0.32, 1.35)
-let ring3 = makeRing(2.75, 0.01, 0.24, 0.95)
+function makeDotRing(radius, count, opacity, rx){
+    let ringPos = new Float32Array(count * 3)
+
+    for(let i = 0; i < count; i++){
+        let a = Math.PI * 2 * i / count
+        ringPos[i*3] = Math.cos(a) * radius
+        ringPos[i*3+1] = Math.sin(a) * radius
+        ringPos[i*3+2] = 0
+    }
+
+    let geo = new THREE.BufferGeometry()
+    geo.setAttribute("position", new THREE.BufferAttribute(ringPos, 3))
+
+    let mat = new THREE.PointsMaterial({
+        color:0x00eaff,
+        size:0.045,
+        transparent:true,
+        opacity:opacity,
+        depthWrite:false,
+        blending:THREE.AdditiveBlending
+    })
+
+    let ring = new THREE.Points(geo, mat)
+    ring.rotation.x = rx
+    main.add(ring)
+    return ring
+}
+
+let ring1 = makeDotRing(3.35, 900, 0.9, 1.2)
+let ring2 = makeDotRing(3.75, 700, 0.45, 1.35)
+let ring3 = makeDotRing(2.95, 600, 0.35, 1.05)
 
 let starsGeo = new THREE.BufferGeometry()
 let starsPos = new Float32Array(3500 * 3)
